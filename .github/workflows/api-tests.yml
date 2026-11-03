@@ -78,21 +78,37 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    env:
+      ALLURE_VERSION: "2.32.0"
     steps:
-      - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
           pattern: allure-results-*
           merge-multiple: true
           path: allure-results
-      - name: Build Allure report
-        uses: simple-elf/allure-report-action@v1.9
+
+      # Previous report on gh-pages supplies the history used for trend charts
+      - name: Fetch previous report
+        uses: actions/checkout@v4
+        continue-on-error: true
         with:
-          allure_results: allure-results
-          allure_history: allure-history
-          keep_reports: 20
+          ref: gh-pages
+          path: previous-report
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Build Allure report
+        run: |
+          curl -sSL -o allure.tgz "https://github.com/allure-framework/allure2/releases/download/${ALLURE_VERSION}/allure-${ALLURE_VERSION}.tgz"
+          tar -xzf allure.tgz
+          if [ -d previous-report/history ]; then cp -r previous-report/history allure-results/history; fi
+          ./allure-${ALLURE_VERSION}/bin/allure generate allure-results -o allure-report --clean
+
       - name: Publish to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: allure-history
+          publish_dir: allure-report
