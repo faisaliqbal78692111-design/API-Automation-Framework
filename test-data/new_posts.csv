@@ -1,4 +1,0 @@
-title,body,userId,expectedStatus
-Automation post one,Body for post one,1,201
-Automation post two,Body for post two,2,201
-Automation post three,Body for post three,3,201

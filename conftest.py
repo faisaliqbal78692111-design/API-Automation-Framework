@@ -23,11 +23,10 @@ def pytest_generate_tests(metafunc):
 @pytest.fixture(scope="session")
 def playwright_client(playwright):
     ctx = playwright.request.new_context(
-        base_url=config.BASE_URL,
         extra_http_headers=config.default_headers(),
         timeout=config.TIMEOUT_MS,
     )
-    yield PlaywrightClient(ctx)
+    yield PlaywrightClient(ctx, config.BASE_URL)
     ctx.dispose()
 
 

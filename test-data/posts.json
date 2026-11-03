@@ -1,7 +1,0 @@
-[
-  { "id": 1, "userId": 1, "expectedStatus": 200 },
-  { "id": 2, "userId": 1, "expectedStatus": 200 },
-  { "id": 50, "userId": 5, "expectedStatus": 200 },
-  { "id": 100, "userId": 10, "expectedStatus": 200 },
-  { "id": 9999, "userId": null, "expectedStatus": 404 }
-]

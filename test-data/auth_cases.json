@@ -1,0 +1,9 @@
+[
+  { "name": "login-valid", "endpoint": "/login", "payload": { "email": "eve.holt@reqres.in", "password": "cityslicka" }, "expectedStatus": 200, "expectedError": null },
+  { "name": "login-missing-password", "endpoint": "/login", "payload": { "email": "peter@klaven" }, "expectedStatus": 400, "expectedError": "Missing password" },
+  { "name": "login-missing-email", "endpoint": "/login", "payload": { "password": "x" }, "expectedStatus": 400, "expectedError": "Missing email or username" },
+  { "name": "login-unknown-user", "endpoint": "/login", "payload": { "email": "nobody@reqres.in", "password": "x" }, "expectedStatus": 400, "expectedError": "user not found" },
+  { "name": "register-valid", "endpoint": "/register", "payload": { "email": "eve.holt@reqres.in", "password": "pistol" }, "expectedStatus": 200, "expectedError": null },
+  { "name": "register-missing-password", "endpoint": "/register", "payload": { "email": "sydney@fife" }, "expectedStatus": 400, "expectedError": "Missing password" },
+  { "name": "register-empty-body", "endpoint": "/register", "payload": {}, "expectedStatus": 400, "expectedError": "Missing email or username" }
+]

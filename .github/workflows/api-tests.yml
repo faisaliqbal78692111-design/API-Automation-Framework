@@ -31,8 +31,9 @@ jobs:
       contents: read
       checks: write
     env:
-      BASE_URL: ${{ vars.BASE_URL || 'https://jsonplaceholder.typicode.com' }}
+      BASE_URL: ${{ vars.BASE_URL || 'https://reqres.in/api' }}
       API_TOKEN: ${{ secrets.API_TOKEN }}
+      API_KEY: ${{ secrets.API_KEY }}
       API_CLIENT: ${{ matrix.client }}
     steps:
       - uses: actions/checkout@v4
@@ -45,10 +46,11 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Run API tests (parallel)
+      # Serial on purpose: ReqRes rate-limits per minute, so parallel workers only add 429 waits
+      - name: Run API tests
         run: |
           MARKER="${{ github.event.inputs.marker }}"
-          pytest -n auto ${MARKER:+-m "$MARKER"} --junitxml=reports/junit.xml
+          pytest ${MARKER:+-m "$MARKER"} --junitxml=reports/junit.xml
 
       - name: Publish test summary
         if: always()

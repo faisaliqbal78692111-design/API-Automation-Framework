@@ -1,0 +1,6 @@
+[
+  { "id": 1, "name": "cerulean", "year": 2000, "color": "#98B2D1" },
+  { "id": 2, "name": "fuchsia rose", "year": 2001, "color": "#C74375" },
+  { "id": 6, "name": "blue turquoise", "year": 2005, "color": "#53B0AE" },
+  { "id": 12, "name": "honeysuckle", "year": 2011, "color": "#D94F70" }
+]
