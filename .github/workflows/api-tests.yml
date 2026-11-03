@@ -1,0 +1,98 @@
+name: API Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "0 2 * * *"   # nightly, 02:00 UTC
+  workflow_dispatch:
+    inputs:
+      marker:
+        description: "pytest marker (smoke / regression / blank for all)"
+        required: false
+        default: ""
+      client:
+        description: "HTTP backend"
+        type: choice
+        options: [both, playwright, requests]
+        default: both
+
+jobs:
+  api-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        client: ${{ fromJSON(github.event.inputs.client == 'playwright' && '["playwright"]' || github.event.inputs.client == 'requests' && '["requests"]' || '["playwright","requests"]') }}
+    name: api-tests (${{ matrix.client }})
+    permissions:
+      contents: read
+      checks: write
+    env:
+      BASE_URL: ${{ vars.BASE_URL || 'https://jsonplaceholder.typicode.com' }}
+      API_TOKEN: ${{ secrets.API_TOKEN }}
+      API_CLIENT: ${{ matrix.client }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run API tests (parallel)
+        run: |
+          MARKER="${{ github.event.inputs.marker }}"
+          pytest -n auto ${MARKER:+-m "$MARKER"} --junitxml=reports/junit.xml
+
+      - name: Publish test summary
+        if: always()
+        uses: mikepenz/action-junit-report@v4
+        with:
+          report_paths: reports/junit.xml
+          check_name: API results (${{ matrix.client }})
+
+      - name: Upload HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: html-report-${{ matrix.client }}
+          path: reports/
+
+      - name: Upload Allure results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-${{ matrix.client }}
+          path: allure-results/
+
+  publish-allure:
+    needs: api-tests
+    concurrency: gh-pages
+    if: always() && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: allure-results-*
+          merge-multiple: true
+          path: allure-results
+      - name: Build Allure report
+        uses: simple-elf/allure-report-action@v1.9
+        with:
+          allure_results: allure-results
+          allure_history: allure-history
+          keep_reports: 20
+      - name: Publish to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: allure-history
