@@ -1,0 +1,11 @@
+POST https://jsonplaceholder.typicode.com/posts
+Status: 201
+Time: 158 ms
+Request body: {'title': 'Automation post one', 'body': 'Body for post one', 'userId': 1}
+
+{
+  "title": "Automation post one",
+  "body": "Body for post one",
+  "userId": 1,
+  "id": 101
+}

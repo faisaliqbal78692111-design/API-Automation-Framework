@@ -1,0 +1,6 @@
+DELETE https://jsonplaceholder.typicode.com/posts/1
+Status: 200
+Time: 57 ms
+Request body: None
+
+{}
