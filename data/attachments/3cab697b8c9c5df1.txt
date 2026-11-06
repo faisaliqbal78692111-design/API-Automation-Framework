@@ -1,6 +1,0 @@
-POST https://reqres.in/api/login
-Status: 400
-Time: 119 ms
-Request body: {'email': 'nobody@reqres.in', 'password': 'x'}
-
-{"error":"user not found"}
