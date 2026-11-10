@@ -1,0 +1,6 @@
+GET https://reqres.in/api/unknown/23
+Status: 404
+Time: 169 ms
+Request body: None
+
+{}
