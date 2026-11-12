@@ -1,0 +1,6 @@
+POST https://reqres.in/api/register
+Status: 400
+Time: 95 ms
+Request body: {'email': 'sydney@fife'}
+
+{"error":"Missing password"}
