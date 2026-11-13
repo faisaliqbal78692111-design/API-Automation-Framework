@@ -1,6 +1,0 @@
-POST https://reqres.in/api/register
-Status: 400
-Time: 117 ms
-Request body: {}
-
-{"error":"Missing email or username"}
