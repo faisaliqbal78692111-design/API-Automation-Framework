@@ -1,0 +1,6 @@
+POST https://reqres.in/api/login
+Status: 400
+Time: 108 ms
+Request body: {'email': 'peter@klaven'}
+
+{"error":"Missing password"}
