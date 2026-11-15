@@ -1,6 +1,0 @@
-POST https://reqres.in/api/login
-Status: 400
-Time: 110 ms
-Request body: {'password': 'x'}
-
-{"error":"Missing email or username"}
