@@ -1,0 +1,6 @@
+GET https://reqres.in/api/users/999
+Status: 404
+Time: 166 ms
+Request body: None
+
+{}
